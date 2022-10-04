@@ -24,7 +24,7 @@
                         </div>
                         <div class="form-group col-md-4 mb-0">
                             <label for="to-curr">Получаем*</label>
-                            <select class="form-control" id="to-curr" name="to-curr" value="{{ to_curr }}">
+                            <select class="form-control" id="to_curr" name="to-curr" value="{{ to_curr }}">
                                 {% for curr in currencies %}
                                     <option value="{{ curr }}" {% if to_curr == curr %}selected{% endif %}>{{ curr }}</option>
                                 {% endfor %}
