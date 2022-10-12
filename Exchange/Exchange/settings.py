@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'exchange_app',
-    'forms_app'
+    'forms_app',
+    'charts_app'
 ]
 
 MIDDLEWARE = [

@@ -1,6 +1,7 @@
 from django.shortcuts import render
 import requests
 
+
 def exchange(request):
     response = requests.get(url='https://v6.exchangerate-api.com/v6/8f1e1e724cb81ce7b73d1412/latest/USD').json()
     currencies = response.get('conversion_rates')
@@ -28,5 +29,4 @@ def exchange(request):
         }
 
         return render(request=request, template_name='exchange_app/index.html', context=context)
-
 

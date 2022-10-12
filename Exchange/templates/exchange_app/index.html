@@ -23,7 +23,7 @@
                             </select>
                         </div>
                         <div class="form-group col-md-4 mb-0">
-                            <label for="to-curr">Получаем*</label>
+                            <label for="to_curr">Получаем*</label>
                             <select class="form-control" id="to_curr" name="to-curr" value="{{ to_curr }}">
                                 {% for curr in currencies %}
                                     <option value="{{ curr }}" {% if to_curr == curr %}selected{% endif %}>{{ curr }}</option>
@@ -44,6 +44,10 @@
                         </div>
                     {% endif %}
                     <div class="submit-btn mt-3">
+                        <a href="/charts">
+                            <button type="button" id="charts_button" class="btn btn-primary">График</button>
+                        </a>
+
                         <button type="submit" class="btn btn-primary">Рассчитать</button>
                         <button onClick="swapit()" type="button" id="reverse_button" class="btn btn-primary">Обратный перевод</button>
                     </div>
