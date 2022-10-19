@@ -5,36 +5,29 @@ from .fusioncharts import FusionCharts
 
 
 def charts(request):
-    # Chart data is passed to the `dataSource` parameter, like a dictionary in the form of key-value pairs.
-    dataSource = OrderedDict()
+    response = requests.get(url='https://v6.exchangerate-api.com/v6/8f1e1e724cb81ce7b73d1412/latest/USD').json()
+    currencies = response.get('conversion_rates')
+    from_curr = request.POST.get('from-curr')
+    to_curr = request.POST.get('to-curr')
+    if request.method == 'GET':
+        context = {
+            'currencies': currencies,
+            'from_curr': from_curr,
+            'to_curr': to_curr
+        }
+        return render(request=request, template_name='exchange_app/index.html', context=context)
 
-    # The `chartConfig` dict contains key-value pairs of data for chart attribute
-    chartConfig = OrderedDict()
-    chartConfig["caption"] = "Countries With Most Oil Reserves [2017-18]"
-    chartConfig["subCaption"] = "In MMbbl = One Million barrels"
-    chartConfig["xAxisName"] = "Country"
-    chartConfig["yAxisName"] = "Reserves (MMbbl)"
-    chartConfig["numberSuffix"] = "K"
-    chartConfig["theme"] = "fusion"
+    # charts API
+    url = "https://api.apilayer.com/exchangerates_data/convert?to={to}&from={from}&amount={amount}"
 
-    dataSource["chart"] = chartConfig
-    dataSource["data"] = []
+    payload = {}
+    headers = {
+        "apikey": "5xOq13VSvLzq0AtKjUkV7mGZLgF6T1Td"
+    }
 
-    # The data for the chart should be in an array wherein each element of the array  is a JSON object having the `label` and `value` as keys.
-    # Insert the data into the `dataSource['data']` list.
-    dataSource["data"].append({"label": 'Venezuela', "value": '290'})
-    dataSource["data"].append({"label": 'Saudi', "value": '290'})
-    dataSource["data"].append({"label": 'Canada', "value": '180'})
-    dataSource["data"].append({"label": 'Iran', "value": '140'})
-    dataSource["data"].append({"label": 'Russia', "value": '115'})
-    dataSource["data"].append({"label": 'Russia', "value": '115'})
-    dataSource["data"].append({"label": 'UAE', "value": '100'})
-    dataSource["data"].append({"label": 'US', "value": '30'})
-    dataSource["data"].append({"label": 'China', "value": '300'})
+    response = requests.request("GET", url, headers=headers, data=payload)
 
-    # Create an object for the column 2D chart using the FusionCharts class constructor
-    # The chart data is passed to the `dataSource` parameter.
-    column2D = FusionCharts("column2d", "myFirstChart", "600", "400", "myFirstchart-container", "json", dataSource)
-    return render(request, 'charts_app/charts.html', {
-        'output': column2D.render()
-    })
+    status_code = response.status_code
+    result = response.text
+
+
