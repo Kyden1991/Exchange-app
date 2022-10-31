@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'exchange_app',
     'forms_app',
     'charts_app'
+
 ]
 
 MIDDLEWARE = [

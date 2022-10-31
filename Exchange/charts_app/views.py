@@ -1,33 +1,82 @@
 from django.shortcuts import render
 import requests
-from collections import OrderedDict
-from .fusioncharts import FusionCharts
+import json
+from datetime import datetime, timedelta
 
 
 def charts(request):
-    response = requests.get(url='https://v6.exchangerate-api.com/v6/8f1e1e724cb81ce7b73d1412/latest/USD').json()
-    currencies = response.get('conversion_rates')
-    from_curr = request.POST.get('from-curr')
-    to_curr = request.POST.get('to-curr')
     if request.method == 'GET':
-        context = {
-            'currencies': currencies,
-            'from_curr': from_curr,
-            'to_curr': to_curr
+
+        return render(request=request, template_name='exchange_app/index.html')
+
+    if request.method == 'POST':
+
+        end_date = datetime.now().date()
+        start_date = datetime.now().date() - timedelta(days=30)
+        print('end ', end_date)
+        print('start ', start_date)
+        url = f"https://api.apilayer.com/exchangerates_data/timeseries?start_date={start_date}&end_date={end_date}"
+        payload = {}
+        headers = {
+            "apikey": "5xOq13VSvLzq0AtKjUkV7mGZLgF6T1Td"
         }
-        return render(request=request, template_name='exchange_app/index.html', context=context)
 
-    # charts API
-    url = "https://api.apilayer.com/exchangerates_data/convert?to={to}&from={from}&amount={amount}"
+        response = requests.request("GET", url, headers=headers, data=payload).json()
 
-    payload = {}
-    headers = {
-        "apikey": "5xOq13VSvLzq0AtKjUkV7mGZLgF6T1Td"
-    }
+        # create list with dates
+        days_list_json = response.get('rates').keys()
+        day_list = list(days_list_json)
 
-    response = requests.request("GET", url, headers=headers, data=payload)
+        # year : The title for horizontal axis
+        h_var = 'Period'
 
-    status_code = response.status_code
-    result = response.text
+        # price : The title for horizontal axis
+        v_var = 'Price'
+
+        # data : A list of list which will ultimated be used
+        # to populate the Google chart.
+        data = [[h_var,v_var]]
+        """
+        An example of how the data object looks like in the end: 
+            [
+              ['Age', 'Weight'],
+              [ 8,      12],
+              [ 4,      5.5],
+              [ 11,     14],
+              [ 4,      5],
+              [ 3,      3.5],
+              [ 6.5,    7]
+            ]
+        The first list will consists of the title of horizontal and vertical axis,
+        and the subsequent list will contain coordinates of the points to be plotted on
+        the google chart
+        """
+
+        for i in range(len(day_list)):
+            price = response['rates'][f'{day_list[i]}']['AED']
+            data.append([day_list[i], price])
+
+
+            # h_var_JSON : JSON string corresponding to  h_var
+            # json.dumps converts Python objects to JSON strings
+        h_var_JSON = json.dumps(h_var)
+
+        # v_var_JSON : JSON string corresponding to  v_var
+        v_var_JSON = json.dumps(v_var)
+
+        # modified_data : JSON string corresponding to  data
+        modified_data = json.dumps(data)
+        chart_render = {
+            'values': modified_data,
+            'h_title': h_var_JSON,
+            'v_title': v_var_JSON
+        }
+
+        return render(request, "charts_app/charts.html", chart_render)
+
+
+
+
+
 
 
