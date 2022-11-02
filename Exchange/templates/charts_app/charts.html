@@ -11,8 +11,10 @@
                     {% csrf_token %}
                     <div class="form-row">
                         <div class="form-group col-md-4 mb-0">
-                            <label for="amount">Период*</label>
-                            <input id='amount' type="number" class="form-control" placeholder="Введите число" {% if from_amount %} value="{{ from_amount }}" {% endif %} name="from-amount">
+                            <label>Период*</label>
+                            <input id="period_30_days" class="btn btn-primary" type="button" value="30" name="days_30">
+                            <input id="period_182_days" class="btn btn-primary" type="button" value="182" name="days_182">
+                            <input id="period_365_days" class="btn btn-primary" type="button" value="365" name="days_365">
                         </div>
                         <div class="form-group col-md-4 mb-0">
                             <label for="from_curr">Отдаем*</label>
@@ -40,8 +42,8 @@
                             <button type="submit" id="charts_button" class="btn btn-primary">График</button>
                         </a>
 
-                        <a href="/">
-                            <button type="submit" class="btn btn-primary">Рассчитать</button>
+                        <a href="/exchange">
+                            <button type="button" class="btn btn-primary">Рассчитать</button>
                         </a>
                         <button onClick="swapit()" type="button" id="reverse_button" class="btn btn-primary">Обратный перевод</button>
                     </div>

@@ -3,5 +3,5 @@ from .views import exchange
 
 
 urlpatterns = [
-    path('', exchange),
+    path('exchange', exchange),
 ]

@@ -15,7 +15,7 @@
         var data = google.visualization.arrayToDataTable({{values|safe}});
 
         var options = {
-          title: {{h_title|safe}} +' vs. '+ {{v_title|safe}},
+          title: {{v_title|safe}} +' for the month '+ {{h_title|safe}},
           hAxis: {title: {{h_title|safe}}},
           vAxis: {title: {{v_title|safe}}},
           legend: 'none'
